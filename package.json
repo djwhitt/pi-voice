@@ -18,9 +18,10 @@
     "url": "https://github.com/S1M0N38/pi-voice"
   },
   "bin": {
-    "pi-voice": "./src/cli.ts"
+    "pi-voice": "./bin/pi-voice.mjs"
   },
   "files": [
+    "bin",
     "extensions",
     "src",
     "README.md",

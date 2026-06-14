@@ -32,6 +32,10 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = resolve(__dirname, "..");
 const SERVER_SCRIPT = resolve(PACKAGE_ROOT, "extensions", "server.ts");
+// jiti's loader-registration entry. The spawned server is a .ts file, so the
+// child Node process needs jiti's hooks registered; `--import jiti` (the main
+// entry) does NOT register them, so we point at jiti/register by absolute path.
+const JITI_REGISTER = resolve(PACKAGE_ROOT, "node_modules", "jiti", "lib", "jiti-register.mjs");
 const CONFIG_DIR = resolve(homedir(), ".pi", "voice");
 const CONFIG_PATH = resolve(CONFIG_DIR, "config.json");
 const PID_PATH = resolve(CONFIG_DIR, "voice.pid");
@@ -271,7 +275,7 @@ async function cmdServerStart(args: string[]) {
   console.log(`Starting server on http://${host}:${port} ...`);
   const child = spawn(
     "node",
-    ["--import", "jiti", SERVER_SCRIPT, "--host", host, "--port", String(port)],
+    ["--import", JITI_REGISTER, SERVER_SCRIPT, "--host", host, "--port", String(port)],
     { cwd: PACKAGE_ROOT, detached: true, stdio: "ignore" },
   );
   child.unref();
